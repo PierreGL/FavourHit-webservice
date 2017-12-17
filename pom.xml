@@ -15,6 +15,7 @@
       <junit.vintage.version>${junit.version}.0</junit.vintage.version>
       <junit.jupiter.version>5.0.0</junit.jupiter.version>
       <junit.platform.version>1.0.0</junit.platform.version>
+      <spring.version>5.0.2.RELEASE</spring.version>
   </properties>
     
     
@@ -31,18 +32,61 @@
           <target>${java.version}</target>
         </configuration>
       </plugin>
+      
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>2.20.1</version>
+        
+    	<configuration>
+          <includes>            
+            <include>**/*Test.java</include>
+		  </includes>
+        </configuration>
+      </plugin>
+      
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-failsafe-plugin</artifactId>
+        <version>2.20.1</version>
+        <configuration>
+          <includes>
+          	<include>**/*IT.java</include>
+          </includes>
+        </configuration>
+      </plugin>
+      
+	  <plugin>
+	    <groupId>org.codehaus.mojo</groupId>
+	    <artifactId>build-helper-maven-plugin</artifactId>
+	    <executions>
+	        <execution>
+	            <id>add-test-source</id>
+	            <phase>process-resources</phase>
+	            <goals>
+	                <goal>add-test-source</goal>
+	            </goals>
+	            <configuration>
+	                <sources>
+	                    <source>src/it/java</source>
+	                </sources>
+	            </configuration>
+	        </execution>
+	      </executions>
+		</plugin>
+      
     </plugins>
-  
   </build>
 
 
   <dependencies>
-    <dependency>
+  	<!-- TESTING -->
+<!--     <dependency>
          <groupId>org.junit.jupiter</groupId>
          <artifactId>junit-jupiter-engine</artifactId>
          <version>${junit.jupiter.version}</version>
          <scope>test</scope>
-      </dependency>
+      </dependency> -->
       <!-- To run tests on IDE such as Eclipse, Intellij -->
       <dependency>
          <groupId>junit</groupId>
@@ -50,6 +94,7 @@
          <version>${junit.version}</version>
          <scope>test</scope>
       </dependency>
+      <!-- 
       <dependency>
          <groupId>org.junit.platform</groupId>
          <artifactId>junit-platform-runner</artifactId>
@@ -62,14 +107,58 @@
          <version>${junit.vintage.version}</version>
          <scope>test</scope>
       </dependency>
+      -->
+	<dependency>
+	   <groupId>org.mockito</groupId>
+	   <artifactId>mockito-all</artifactId>
+	   <version>1.9.5</version>
+	   <scope>test</scope>
+	</dependency>
+
+	<!-- UTILS -->
+	<dependency>
+	  <groupId>org.apache.logging.log4j</groupId>
+	  <artifactId>log4j-api</artifactId>
+	  <version>2.10.0</version>
+	</dependency>
+	<dependency>
+	  <groupId>org.apache.logging.log4j</groupId>
+	  <artifactId>log4j-core</artifactId>
+	  <version>2.10.0</version>
+	</dependency>
+    
+    <!-- WEB -->  
+    <dependency>
+		<groupId>javax.servlet</groupId>
+		<artifactId>javax.servlet-api</artifactId>
+		<version>4.0.0</version>
+		<scope>provided</scope>
+	</dependency>
+
+<!-- 	<dependency>
+		<groupId>org.springframework</groupId>
+		<artifactId>spring-core</artifactId>
+		<version>5.0.2.RELEASE</version>
+	</dependency> -->
       
-      <dependency>
-	    <groupId>javax.servlet</groupId>
-	    <artifactId>javax.servlet-api</artifactId>
-	    <version>4.0.0</version>
-	    <scope>provided</scope>
-	  </dependency>
+    <dependency>
+	    <groupId>org.springframework</groupId>
+	    <artifactId>spring-context</artifactId>
+	    <version>${spring.version}</version>
+	</dependency>
       
+    <dependency>
+	    <groupId>org.springframework</groupId>
+	    <artifactId>spring-web</artifactId>
+	    <version>${spring.version}</version>
+	</dependency>
+	
+	<dependency>
+	    <groupId>org.springframework</groupId>
+	    <artifactId>spring-webmvc</artifactId>
+	    <version>${spring.version}</version>
+	</dependency>
+	
   </dependencies>
 
 </project>
