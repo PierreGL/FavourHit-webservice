@@ -15,5 +15,13 @@ public class AccountDaoMapImpl implements AccountDao {
 		}
 		DataFolderByAccountMap.data.put(account.getId(), new HashMap<>());
 	}
+	
+	@Override
+	public boolean isAccountExist(Account account) {
+		if(account != null) {
+			return DataFolderByAccountMap.data.containsKey(account.getId());
+		}
+		return false;
+	}
 
 }

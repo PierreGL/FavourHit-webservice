@@ -11,6 +11,8 @@ import org.springframework.web.servlet.DispatcherServlet;
 
 public class RestControllerInitializer implements WebApplicationInitializer {
 
+	private final String REST_URL = "/rest";
+	
 	@Override
 	public void onStartup(ServletContext servletContext) throws ServletException {
 		AnnotationConfigWebApplicationContext context = new AnnotationConfigWebApplicationContext();
@@ -23,7 +25,7 @@ public class RestControllerInitializer implements WebApplicationInitializer {
 				.addServlet("restDispatcher", new DispatcherServlet(context));
 		
 		restDispatcher.setLoadOnStartup(1);
-		restDispatcher.addMapping("/rest/*");
+		restDispatcher.addMapping(REST_URL+"/*");
 		
 	}
 

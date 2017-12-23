@@ -9,9 +9,12 @@ import org.junit.Before;
 import org.junit.Test;
 import org.pgl.fh.webservice.business.FolderBusiness;
 import org.pgl.fh.webservice.business.impl.FolderBusinessImpl;
+import org.pgl.fh.webservice.dao.AccountDao;
 import org.pgl.fh.webservice.dao.FolderDao;
 import org.pgl.fh.webservice.data.Account;
+import org.pgl.fh.webservice.data.CreateFailCause;
 import org.pgl.fh.webservice.data.Folder;
+import org.pgl.fh.webservice.data.FolderCreateResponse;
 import org.pgl.fh.webservice.data.FolderRemoveResponse;
 import org.pgl.fh.webservice.data.FolderTree;
 import org.pgl.fh.webservice.data.RemoveFailCause;
@@ -29,25 +32,43 @@ public class FolderBusinessImplTest {
 	private FolderBusiness sut;
 	
 	private FolderDao folderDaoMock;
+	private AccountDao accountDaoMock;
 	
 	@Before
 	public void setup() {
 		folderDaoMock = mock(FolderDao.class);
-		this.sut = new FolderBusinessImpl(folderDaoMock);
+		accountDaoMock = mock(AccountDao.class);
+		this.sut = new FolderBusinessImpl(folderDaoMock, accountDaoMock);
 	}
 	
 	@Test
-	public void testAddRootFolder() {
+	public void testAddRootFolder_succeed() {
 		//GIVEN
 		Folder newFolder = new Folder();
 		newFolder.setName("MyNewFolder");
 		Account existingAccount = givenExistingAccount();
 		
 		//WHEN
-		sut.addRootFolder(existingAccount, newFolder);
+		FolderCreateResponse folderCreateResponse = sut.addRootFolder(existingAccount, newFolder);
 		
 		//THEN
+		assertTrue(folderCreateResponse.getCreationSucceed());
 		verify(folderDaoMock, times(1)).createFolder(existingAccount, newFolder);
+	}
+	
+	@Test
+	public void testAddRootFolder_NotSucceed_AccountNotExisting() {
+		//GIVEN
+		Folder newFolder = new Folder();
+		newFolder.setName("MyNewFolder");
+		Account account = givenNotExistingAccount();
+		
+		//WHEN
+		FolderCreateResponse folderCreateResponse = sut.addRootFolder(account, newFolder);
+		
+		//THEN
+		assertFalse(folderCreateResponse.getCreationSucceed());
+		assertTrue(folderCreateResponse.getCreateFailCauseSet().contains(CreateFailCause.INEXISTING_ACCOUNT));
 	}
 	
 	@Test
@@ -60,7 +81,6 @@ public class FolderBusinessImplTest {
 		parentFolder.setName("myParentFolder");
 		
 		Account existingAccount = givenExistingAccount();
-
 		
 		//WHEN
 		sut.addInnerFolder(existingAccount, newFolder, parentFolder);
@@ -125,10 +145,17 @@ public class FolderBusinessImplTest {
 		return existingNotEmptyFolder;	
 	}
 	
-	private Account givenExistingAccount() {
+	private Account givenExistingAccount() {		
 		Account existingAccount = new Account();
 		existingAccount.setId(1L);
+		when(accountDaoMock.isAccountExist(existingAccount)).thenReturn(Boolean.TRUE);
 		return existingAccount;
+	}
+	
+	private Account givenNotExistingAccount() {		
+		Account notExistingAccount = new Account();
+		notExistingAccount.setId(2L);
+		return notExistingAccount;
 	}
 	
 	private Account givenExistingAccountWith2RootFolderAndEachOneChild() {

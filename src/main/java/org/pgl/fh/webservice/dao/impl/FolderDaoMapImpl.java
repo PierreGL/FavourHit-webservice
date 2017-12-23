@@ -11,6 +11,7 @@ import org.pgl.fh.webservice.dao.FolderDao;
 import org.pgl.fh.webservice.dao.DataFolderByAccountMap;
 import org.pgl.fh.webservice.data.Account;
 import org.pgl.fh.webservice.data.Folder;
+import org.pgl.fh.webservice.data.exception.NoAccountException;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -56,7 +57,9 @@ public class FolderDaoMapImpl implements FolderDao {
 		Set<Folder> result = new HashSet<>();
 		if(account!= null && account.getId() != null) {
 			Map<String, Folder> mapFolders = DataFolderByAccountMap.data.get(account.getId());
-			result = mapFolders.values().stream().collect(Collectors.toSet());
+			if(mapFolders != null) {
+				result = mapFolders.values().stream().collect(Collectors.toSet());
+			}
 		}
 		return result;
 	}
@@ -78,7 +81,11 @@ public class FolderDaoMapImpl implements FolderDao {
 	
 	private void processCreateFolder(Account account, Folder folder){
 		Map<String, Folder> mapFolders = DataFolderByAccountMap.data.get(account.getId());
-		mapFolders.put(folder.getPath(), folder);
+		if(mapFolders != null) {
+			mapFolders.put(folder.getPath(), folder);
+		}else {
+			throw new NoAccountException();
+		}
 	}
 	
 }

@@ -6,4 +6,5 @@ public interface AccountDao {
 	
 	void createAccount(Account account);
 
+	boolean isAccountExist(Account account);
 }

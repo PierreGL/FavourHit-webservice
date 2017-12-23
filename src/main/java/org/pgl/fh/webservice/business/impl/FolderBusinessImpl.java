@@ -6,9 +6,12 @@ import java.util.stream.Collectors;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.pgl.fh.webservice.business.FolderBusiness;
+import org.pgl.fh.webservice.dao.AccountDao;
 import org.pgl.fh.webservice.dao.FolderDao;
 import org.pgl.fh.webservice.data.Account;
+import org.pgl.fh.webservice.data.CreateFailCause;
 import org.pgl.fh.webservice.data.Folder;
+import org.pgl.fh.webservice.data.FolderCreateResponse;
 import org.pgl.fh.webservice.data.FolderRemoveResponse;
 import org.pgl.fh.webservice.data.FolderTree;
 import org.pgl.fh.webservice.data.RemoveFailCause;
@@ -20,24 +23,47 @@ public class FolderBusinessImpl implements FolderBusiness {
 
 	private static final Logger LOGGER = LogManager.getLogger(FolderBusinessImpl.class.getName());
 	
+	private AccountDao accountDao;
 	private FolderDao folderDao;
 		
 	@Autowired
-	public FolderBusinessImpl(FolderDao folderDao) {
+	public FolderBusinessImpl(FolderDao folderDao, AccountDao accountDao) {
 		LOGGER.debug("FolderBusinessImpl CONSTRUCTOR");
 		this.folderDao = folderDao;
+		this.accountDao = accountDao;
 	}
 	
 	@Override
-	public void addRootFolder(Account account, Folder folder) {
+	public FolderCreateResponse addRootFolder(Account account, Folder folder) {
 		LOGGER.debug("FolderBusinessImpl addRootFolder");
-		folderDao.createFolder(account, folder);
+		FolderCreateResponse result = new FolderCreateResponse();
+
+		if(accountDao.isAccountExist(account)) {
+			folderDao.createFolder(account, folder);
+			result.setCreationSucceed(Boolean.TRUE);
+		}else {
+			result.setCreationSucceed(Boolean.FALSE);
+			result.addCreateFailCause(CreateFailCause.INEXISTING_ACCOUNT);
+		}
+		
+		return result;
 	}
 	
 	@Override
-	public void addInnerFolder(Account account, Folder newFolder, Folder parentFolder) {
+	public FolderCreateResponse addInnerFolder(Account account, Folder newFolder, Folder parentFolder) {
+		FolderCreateResponse result = new FolderCreateResponse();
+		
 		newFolder.setParent(parentFolder);
-		folderDao.createFolder(account, newFolder);
+		if(accountDao.isAccountExist(account)) {
+			folderDao.createFolder(account, newFolder);
+			result.setCreationSucceed(Boolean.TRUE);
+		}else {
+			result.setCreationSucceed(Boolean.FALSE);
+			result.addCreateFailCause(CreateFailCause.INEXISTING_ACCOUNT);
+		}
+		
+		return result;
+
 	}
 	
 	@Override

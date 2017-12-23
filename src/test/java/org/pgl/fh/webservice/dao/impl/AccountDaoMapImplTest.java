@@ -1,6 +1,8 @@
 package org.pgl.fh.webservice.dao.impl;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.HashMap;
 
@@ -37,6 +39,24 @@ public class AccountDaoMapImplTest {
 		sut.createAccount(newAccount);
 		
 		assertNotNull(DataFolderByAccountMap.data.get(newAccount.getId()));
+	}
+	
+	@Test
+	public void testIsAccountExist_Exist() {
+		Account existingAccount = givenExistingAccount();
+		
+		boolean result = sut.isAccountExist(existingAccount);
+		
+		assertTrue(result);
+	}
+	
+	@Test
+	public void testIsAccountExist_NotExist() {
+		Account newAccount = new Account();
+		
+		boolean result = sut.isAccountExist(newAccount);
+		
+		assertFalse(result);
 	}
 	
 	private Account givenExistingAccount() {
