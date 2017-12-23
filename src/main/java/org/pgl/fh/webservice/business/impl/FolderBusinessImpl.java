@@ -9,7 +9,7 @@ import org.pgl.fh.webservice.business.FolderBusiness;
 import org.pgl.fh.webservice.dao.AccountDao;
 import org.pgl.fh.webservice.dao.FolderDao;
 import org.pgl.fh.webservice.data.Account;
-import org.pgl.fh.webservice.data.CreateFailCause;
+import org.pgl.fh.webservice.data.FolderCreateFailCause;
 import org.pgl.fh.webservice.data.Folder;
 import org.pgl.fh.webservice.data.FolderCreateResponse;
 import org.pgl.fh.webservice.data.FolderRemoveResponse;
@@ -38,12 +38,12 @@ public class FolderBusinessImpl implements FolderBusiness {
 		LOGGER.debug("FolderBusinessImpl addRootFolder");
 		FolderCreateResponse result = new FolderCreateResponse();
 
-		if(accountDao.isAccountExist(account)) {
+		if(accountDao.isIdentifierAccountExist(account.getIdentifier())) {
 			folderDao.createFolder(account, folder);
 			result.setCreationSucceed(Boolean.TRUE);
 		}else {
 			result.setCreationSucceed(Boolean.FALSE);
-			result.addCreateFailCause(CreateFailCause.INEXISTING_ACCOUNT);
+			result.addCreateFailCause(FolderCreateFailCause.INEXISTING_ACCOUNT);
 		}
 		
 		return result;
@@ -54,12 +54,12 @@ public class FolderBusinessImpl implements FolderBusiness {
 		FolderCreateResponse result = new FolderCreateResponse();
 		
 		newFolder.setParent(parentFolder);
-		if(accountDao.isAccountExist(account)) {
+		if(accountDao.isIdentifierAccountExist(account.getIdentifier())) {
 			folderDao.createFolder(account, newFolder);
 			result.setCreationSucceed(Boolean.TRUE);
 		}else {
 			result.setCreationSucceed(Boolean.FALSE);
-			result.addCreateFailCause(CreateFailCause.INEXISTING_ACCOUNT);
+			result.addCreateFailCause(FolderCreateFailCause.INEXISTING_ACCOUNT);
 		}
 		
 		return result;

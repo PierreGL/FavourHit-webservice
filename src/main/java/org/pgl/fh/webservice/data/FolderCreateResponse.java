@@ -7,7 +7,7 @@ public class FolderCreateResponse {
 
 	private Boolean creationSucceed;
 
-	private Set<CreateFailCause> createFailCauseSet = new HashSet<>();
+	private Set<FolderCreateFailCause> createFailCauseSet = new HashSet<>();
 	
 	public Boolean getCreationSucceed() {
 		return creationSucceed;
@@ -15,10 +15,10 @@ public class FolderCreateResponse {
 	public void setCreationSucceed(Boolean creationSucceed) {
 		this.creationSucceed = creationSucceed;
 	}
-	public Set<CreateFailCause> getCreateFailCauseSet() {
+	public Set<FolderCreateFailCause> getCreateFailCauseSet() {
 		return createFailCauseSet;
 	}
-	public void addCreateFailCause(CreateFailCause createFailCause) {
+	public void addCreateFailCause(FolderCreateFailCause createFailCause) {
 		this.createFailCauseSet.add(createFailCause);
 	}
 }

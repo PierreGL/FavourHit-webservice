@@ -32,8 +32,8 @@ public class FolderDaoMapImplTest {
 		
 		sut.createFolder(account, newFolder);
 	
-		assertTrue(DataFolderByAccountMap.data.get(account.getId()).containsKey(newFolder.getPath())); 
-		assertEquals(DataFolderByAccountMap.data.get(account.getId()).get(newFolder.getPath()), newFolder); 
+		assertTrue(DataFolderByAccountMap.data.get(account.getIdentifier()).containsKey(newFolder.getPath())); 
+		assertEquals(DataFolderByAccountMap.data.get(account.getIdentifier()).get(newFolder.getPath()), newFolder); 
 	}
 	
 	@Test
@@ -105,16 +105,16 @@ public class FolderDaoMapImplTest {
 	
 	private Account givenExistingAccount() {
 		Account account = new Account();
-		Long accountId = 1L;
-		account.setId(accountId);
-		DataFolderByAccountMap.data.put(accountId, new HashMap<>());
+		String identifier = "Billy";
+		account.setIdentifier(identifier);
+		DataFolderByAccountMap.data.put(identifier, new HashMap<>());
 		return account;
 	}
 	
 	private Account givenExistingAccountWithFolders() {
 		Account account = new Account();
-		Long accountId = 1L;
-		account.setId(accountId);
+		String identifier = "Billy";
+		account.setIdentifier(identifier);
 		
 		Map<String, Folder> mapFolders = new HashMap<>();
 		Folder folder1 = new Folder();
@@ -124,7 +124,7 @@ public class FolderDaoMapImplTest {
 		mapFolders.put(folder1.getPath(), folder1);
 		mapFolders.put(folder2.getPath(), folder2);
 
-		DataFolderByAccountMap.data.put(accountId, mapFolders);
+		DataFolderByAccountMap.data.put(identifier, mapFolders);
 		return account;
 	}
 }

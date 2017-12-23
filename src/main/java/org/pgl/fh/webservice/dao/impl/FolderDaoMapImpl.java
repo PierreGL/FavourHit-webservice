@@ -22,7 +22,7 @@ public class FolderDaoMapImpl implements FolderDao {
 	@Override
 	public void createFolder(Account account, Folder folder) {
 		LOGGER.debug("FolderDaoImpl add folder in map");
-		if(account != null && account.getId() != null) {
+		if(account != null && account.getIdentifier() != null) {
 			updateOrCreateParent(account, folder);
 			processCreateFolder(account, folder);
 		}
@@ -31,7 +31,7 @@ public class FolderDaoMapImpl implements FolderDao {
 	@Override
 	public void removeFolder(Account account, Folder folder) {
 		LOGGER.debug("FolderDaoImpl remove folder in map");
-		Map<String, Folder> mapFolders = DataFolderByAccountMap.data.get(account.getId());
+		Map<String, Folder> mapFolders = DataFolderByAccountMap.data.get(account.getIdentifier());
 		mapFolders.remove(folder.getPath());		
 	}
 	
@@ -39,7 +39,7 @@ public class FolderDaoMapImpl implements FolderDao {
 	public Boolean hasChildren(Account account, Folder folder) {
 		LOGGER.debug("FolderDaoImpl hasChildren in map");
 
-		Map<String, Folder> mapFolders = DataFolderByAccountMap.data.get(account.getId());
+		Map<String, Folder> mapFolders = DataFolderByAccountMap.data.get(account.getIdentifier());
 		Boolean result = mapFolders.values().stream().anyMatch(
 				fd -> fd.getParent() != null ? folder.getPath().equals(fd.getParent().getPath()) : false);
 		
@@ -48,15 +48,15 @@ public class FolderDaoMapImpl implements FolderDao {
 
 	@Override
 	public Folder getFolderByPath(Account account, String path) {
-		Map<String, Folder> mapFolders = DataFolderByAccountMap.data.get(account.getId());
+		Map<String, Folder> mapFolders = DataFolderByAccountMap.data.get(account.getIdentifier());
 		return mapFolders.get(path);
 	}
 	
 	@Override
 	public Set<Folder> getAllFolder(Account account) {
 		Set<Folder> result = new HashSet<>();
-		if(account!= null && account.getId() != null) {
-			Map<String, Folder> mapFolders = DataFolderByAccountMap.data.get(account.getId());
+		if(account!= null && account.getIdentifier() != null) {
+			Map<String, Folder> mapFolders = DataFolderByAccountMap.data.get(account.getIdentifier());
 			if(mapFolders != null) {
 				result = mapFolders.values().stream().collect(Collectors.toSet());
 			}
@@ -67,7 +67,7 @@ public class FolderDaoMapImpl implements FolderDao {
 	private void updateOrCreateParent(Account account, Folder folder) {
 		Folder parent = folder.getParent();
 		if(parent != null) {
-			Map<String, Folder> mapFolders = DataFolderByAccountMap.data.get(account.getId());
+			Map<String, Folder> mapFolders = DataFolderByAccountMap.data.get(account.getIdentifier());
 			Folder existingParent = mapFolders.get(parent.getPath());
 			if(existingParent != null) {
 				folder.setParent(existingParent);
@@ -80,7 +80,7 @@ public class FolderDaoMapImpl implements FolderDao {
 	}
 	
 	private void processCreateFolder(Account account, Folder folder){
-		Map<String, Folder> mapFolders = DataFolderByAccountMap.data.get(account.getId());
+		Map<String, Folder> mapFolders = DataFolderByAccountMap.data.get(account.getIdentifier());
 		if(mapFolders != null) {
 			mapFolders.put(folder.getPath(), folder);
 		}else {

@@ -12,7 +12,7 @@ import org.pgl.fh.webservice.business.impl.FolderBusinessImpl;
 import org.pgl.fh.webservice.dao.AccountDao;
 import org.pgl.fh.webservice.dao.FolderDao;
 import org.pgl.fh.webservice.data.Account;
-import org.pgl.fh.webservice.data.CreateFailCause;
+import org.pgl.fh.webservice.data.FolderCreateFailCause;
 import org.pgl.fh.webservice.data.Folder;
 import org.pgl.fh.webservice.data.FolderCreateResponse;
 import org.pgl.fh.webservice.data.FolderRemoveResponse;
@@ -68,7 +68,7 @@ public class FolderBusinessImplTest {
 		
 		//THEN
 		assertFalse(folderCreateResponse.getCreationSucceed());
-		assertTrue(folderCreateResponse.getCreateFailCauseSet().contains(CreateFailCause.INEXISTING_ACCOUNT));
+		assertTrue(folderCreateResponse.getCreateFailCauseSet().contains(FolderCreateFailCause.INEXISTING_ACCOUNT));
 	}
 	
 	@Test
@@ -147,8 +147,8 @@ public class FolderBusinessImplTest {
 	
 	private Account givenExistingAccount() {		
 		Account existingAccount = new Account();
-		existingAccount.setId(1L);
-		when(accountDaoMock.isAccountExist(existingAccount)).thenReturn(Boolean.TRUE);
+		existingAccount.setIdentifier("Haddock");
+		when(accountDaoMock.isIdentifierAccountExist(existingAccount.getIdentifier())).thenReturn(Boolean.TRUE);
 		return existingAccount;
 	}
 	

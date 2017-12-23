@@ -12,5 +12,5 @@ public class DataFolderByAccountMap {
 	
 	private DataFolderByAccountMap(){};
 	
-	public static final Map<Long, Map<String, Folder>> data = new HashMap<>();
+	public static final Map<String, Map<String, Folder>> data = new HashMap<>();
 }

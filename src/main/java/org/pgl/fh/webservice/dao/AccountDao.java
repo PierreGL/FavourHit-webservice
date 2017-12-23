@@ -1,10 +1,11 @@
 package org.pgl.fh.webservice.dao;
 
 import org.pgl.fh.webservice.data.Account;
+import org.pgl.fh.webservice.data.AccountCreationData;
 
 public interface AccountDao {
 	
-	void createAccount(Account account);
+	Account createAccount(AccountCreationData accountCreationData);
 
-	boolean isAccountExist(Account account);
+	boolean isIdentifierAccountExist(String identifier);
 }

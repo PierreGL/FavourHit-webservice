@@ -5,21 +5,26 @@ import java.util.HashMap;
 import org.pgl.fh.webservice.dao.AccountDao;
 import org.pgl.fh.webservice.dao.DataFolderByAccountMap;
 import org.pgl.fh.webservice.data.Account;
+import org.pgl.fh.webservice.data.AccountCreationData;
 
 public class AccountDaoMapImpl implements AccountDao {
 
 	@Override
-	public void createAccount(Account account) {
-		if(DataFolderByAccountMap.data.get(account.getId()) != null) {
+	public Account createAccount(AccountCreationData accountCreationData) {
+		String identifier = accountCreationData.getIdentifier();
+		if(DataFolderByAccountMap.data.get(identifier) != null) {
 			throw new RuntimeException();
 		}
-		DataFolderByAccountMap.data.put(account.getId(), new HashMap<>());
+		DataFolderByAccountMap.data.put(identifier, new HashMap<>());
+		Account result = new Account();
+		result.setIdentifier(identifier);
+		return result;
 	}
 	
 	@Override
-	public boolean isAccountExist(Account account) {
-		if(account != null) {
-			return DataFolderByAccountMap.data.containsKey(account.getId());
+	public boolean isIdentifierAccountExist(String identifier) {
+		if(identifier != null) {
+			return DataFolderByAccountMap.data.containsKey(identifier);
 		}
 		return false;
 	}
